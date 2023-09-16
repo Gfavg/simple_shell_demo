@@ -8,7 +8,7 @@
 
 void gfPrint(const char *argt)
 {
-        write(STDOUT_FILENO, argt, strlen(argt));
+        write(STDOUT_FILENO, argt, _strlen(argt));
 }
 
 /**
@@ -25,8 +25,7 @@ void showPrompt()
  * @inp -
  *
  */
-void executable (char *args[])
-
+void executable(char *args[])
 {
         pid_t childPid = fork();
 
@@ -71,5 +70,27 @@ void readInput(char *inp)
                         exit(EXIT_FAILURE);
                 }
 	}
-	inp[strcspn(inp, "\n")] = '\0';
+	inp[_strcspn(inp, "\n")] = '\0';
+}
+
+/**
+ * tokInp - tokenizes the input string
+ * @inp - a pointer to the command input string
+ * @args - an array of pointers to strings to store tokens(command and arguments)
+ *
+ */
+void tokInp(char *inp, char *args[])
+{
+	char *tok;
+	int arg_cnt;
+	
+	arg_cnt = 0;
+	tok = strtok(inp, " ");
+	while (tok != NULL && arg_cnt < (MAX_ARG_COUNT - 1))
+	{
+		args[arg_cnt] = tok;
+		arg_cnt++;
+		tok = strtok(NULL, " ");
+	}
+	args[arg_cnt] = NULL;
 }
